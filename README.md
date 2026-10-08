@@ -47,6 +47,9 @@ cd ..
 docker compose up -d --build
 ```
 
+Only the `backend` service runs migrations. The `queue` worker waits until the API container has started.
+
+
 Services:
 
 | Service   | URL / port              | Role                          |

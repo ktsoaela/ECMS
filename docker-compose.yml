@@ -52,6 +52,7 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       QUEUE_CONNECTION: database
+      RUN_MIGRATIONS: "false"
     volumes:
       - ./backend:/var/www/html
     command: ["php", "artisan", "queue:work", "--sleep=1", "--tries=3", "--timeout=90"]
