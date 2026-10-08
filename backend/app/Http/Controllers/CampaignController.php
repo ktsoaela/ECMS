@@ -9,19 +9,20 @@ use App\Http\Resources\CampaignListResource;
 use App\Models\Campaign;
 use App\Services\CampaignService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CampaignController extends Controller
 {
     public function __construct(private readonly CampaignService $campaigns) {}
 
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
         $campaigns = Campaign::query()
             ->orderByDesc('created_at')
             ->get();
 
-        return CampaignListResource::collection($campaigns);
+        return response()->json(
+            CampaignListResource::collection($campaigns)->resolve()
+        );
     }
 
     public function store(StoreCampaignRequest $request): JsonResponse
