@@ -117,4 +117,7 @@ docker-compose.yml
 
 ## Optional: Herd instead of Docker for PHP
 
-You can still link `backend/` in Laravel Herd and point `DB_HOST=127.0.0.1` at the Compose MySQL port. For the default Docker workflow above, use `http://localhost:8000` for the API.
+You can still link `backend/` in Laravel Herd. Set `DB_HOST=127.0.0.1` in `backend/.env` so PHP on the host reaches the published MySQL port. With the default Docker workflow, keep `DB_HOST=mysql` and use:
+
+- App: http://localhost:4200
+- API: http://localhost:8000 (health: http://localhost:8000/up)
