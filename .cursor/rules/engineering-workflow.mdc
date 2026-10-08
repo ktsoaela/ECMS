@@ -1,0 +1,33 @@
+---
+description: Conventional Commits and verify the affected flow before committing
+alwaysApply: true
+---
+
+# Engineering workflow
+
+Follow `docs/engineering-rules.md`. A behaviour change is committed only after that flow has been run and the checks that exist are green.
+
+## Commits
+
+Use Conventional Commits 1.0.0: `<type>[optional scope]: <description>`.
+
+Types: `feat`, `fix`, `docs`, `test`, `refactor`, `ci`, `chore`. Scopes when useful: `api`, `queue`, `validation`, `db`, `ui`, `adr`.
+
+One logical change per commit. Put tests in a `test` commit beside the behaviour, not inside `feat: add everything`.
+
+```text
+# ❌
+feat: add everything
+
+# ✅
+feat(api): add campaign creation endpoint
+test(api): add campaign submission tests
+```
+
+## Before a feat, fix, API, or queue commit
+
+Run the app and exercise the path. Backend: `php artisan test` once tests exist. Frontend: `npm test` or `ng build` once the app exists. Queue work includes creating a campaign and running the worker.
+
+`docs` and `refactor` commits are verified by review and any test, build, or lint that applies. Do not commit unfinished behaviour as a completed `feat`.
+
+Do not commit unless the user asked for the commit.

@@ -1,0 +1,29 @@
+---
+description: Parameterised queries, secret handling, and response allow-lists
+alwaysApply: true
+---
+
+# Security
+
+Use Laravel's parameterised database access. Validate with form requests. Return only the fields in `docs/guardrails.md`.
+
+## Do
+
+- Read and write through Eloquent or query bindings.
+- Return HTTP 201, 422, 404, and 500 as the contract specifies.
+- Commit `.env.example` with local-only placeholders.
+
+## Do not
+
+- Concatenate request input into SQL.
+- Commit `.env`, passwords, or API keys.
+- Put stack traces, tokens, or unused columns in JSON.
+- Commit `poa.md`. It is gitignored research notes.
+
+```php
+// ❌ BAD
+DB::select("SELECT * FROM campaigns WHERE name = '$name'");
+
+// ✅ GOOD
+Campaign::query()->where('name', $name)->first();
+```

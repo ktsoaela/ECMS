@@ -1,0 +1,28 @@
+---
+description: Phase gate, priorities, and technologies that stay out of this assessment
+alwaysApply: true
+---
+
+# Project scope
+
+Phase 1 only, until `docs/guardrails.md` says the gate has passed. Accepted ADRs 0001–0007 are the architecture. Proposed ADRs 0008–0010 stay unimplemented.
+
+## Do
+
+- Build `POST /api/campaigns`, `GET /api/campaigns`, and `GET /api/campaigns/{id}`.
+- Then the queue worker, Angular create, list, and detail, and the Task 11 tests.
+- Follow the assessment order: API and data, Angular, tests, refinement.
+
+## Do not
+
+- Add Kafka, RabbitMQ, Redis, Kubernetes, microservices, Elasticsearch, Terraform, AWS deploy, authentication, a real mail provider, ETL, NgRx, Storybook, or the block editor.
+- Edit an accepted ADR into a different decision. Write a new record and link it.
+- Start Scramble, Postman, or GitHub Actions before the phase gate.
+
+```text
+# ❌ Phase 2 during Phase 1
+composer require dedoc/scramble
+
+# ✅ Stay on the required flow
+POST /api/campaigns → MySQL → queue → Angular
+```

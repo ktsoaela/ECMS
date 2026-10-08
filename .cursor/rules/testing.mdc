@@ -1,0 +1,31 @@
+---
+description: PHPUnit cases required for campaign submission, validation, and the queue
+globs: backend/tests/**/*.php
+alwaysApply: false
+---
+
+# Backend tests
+
+Cover the assessment cases. Full coverage is not the goal. Each test should state the behaviour it protects.
+
+## Required cases
+
+- A valid campaign returns 201 and is stored with the submitted name, subject, body, count, and `queued`.
+- Missing required fields return 422 and the `details` contract.
+- An invalid email is rejected.
+- A duplicate email is rejected after trim and lowercase.
+- One email job is created per recipient and belongs to that campaign.
+- A processed job becomes `sent`.
+- A failed job is marked `failed` and the worker case still completes the other recipients.
+
+## Do not
+
+- Assert against a real mailbox.
+- Require Scramble, Postman, or CI for these tests to pass.
+
+```php
+// ✅ GOOD
+$this->postJson('/api/campaigns', $payload)
+    ->assertCreated()
+    ->assertJsonPath('status', 'queued');
+```

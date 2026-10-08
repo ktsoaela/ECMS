@@ -1,0 +1,31 @@
+---
+description: Angular standalone UI, reactive forms, and API-backed campaign screens
+globs: frontend/**/*.{ts,html,scss}
+alwaysApply: false
+---
+
+# Angular frontend
+
+Angular 17+ standalone components, strict TypeScript, and reactive forms. Use signals or one campaign service for view state. Style with SCSS and Bootstrap 5 grid and utilities only.
+
+## Do
+
+- Load campaigns from `GET /api/campaigns` and detail from `GET /api/campaigns/{id}`.
+- Validate required fields, email format, and duplicate recipients before submit.
+- Show loading, an empty list, a success message with campaign id and recipient count, and API `details` errors.
+- Provide navigation between create and list.
+
+## Do not
+
+- Hard-code campaign rows.
+- Import Bootstrap JavaScript.
+- Add NgRx or the Header, Text, Image, and Button editor.
+- Send mail from the browser. The API queues the work.
+
+```typescript
+// ❌ BAD
+campaigns = [{ name: 'Spring Sale' }];
+
+// ✅ GOOD
+this.campaigns.set(await this.api.list());
+```

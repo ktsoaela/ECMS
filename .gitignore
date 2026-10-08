@@ -1,0 +1,8 @@
+# Local research notes. Not part of the submission.
+poa.md
+.cursor/plans/campaign_guardrails_adrs_7fce43dd.plan.md
+
+# Secrets and local env
+.env
+.env.*
+!.env.example

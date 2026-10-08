@@ -1,0 +1,33 @@
+---
+description: Laravel HTTP boundary, validation contract, and campaign persistence
+globs: backend/**/*.php
+alwaysApply: false
+---
+
+# Laravel API
+
+The controller stays thin. `CampaignService` owns creation and the status rules. Validation stays in a form request. API resources return the allow-list.
+
+## Do
+
+- Accept `name`, `subject`, `body`, and `recipient_emails` on `POST /api/campaigns`.
+- Trim and lowercase emails, then reject duplicates.
+- Create the campaign and its email jobs in one transaction, then dispatch after commit.
+- Use the campaign and email-job enums from ADR-0003.
+- Return 201 `{ campaign_id, recipient_count, status }` and 422 `{ error, details }`.
+
+## Do not
+
+- Put persistence and dispatch in the controller.
+- Add a repository interface or a second mail-provider strategy.
+- Return Laravel's default `errors` array as the public 422 body.
+
+```php
+// ✅ GOOD
+public function store(StoreCampaignRequest $request): CampaignCreatedResource
+{
+    return new CampaignCreatedResource(
+        $this->campaigns->create($request->validated())
+    );
+}
+```

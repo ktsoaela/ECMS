@@ -1,0 +1,30 @@
+---
+description: Per-recipient queue jobs, simulated send, and isolated failure
+globs: backend/**/*.php
+alwaysApply: false
+---
+
+# Queue jobs
+
+One `email_jobs` row and one queued job per recipient. `QUEUE_CONNECTION=database`. Dispatch only after the campaign transaction commits.
+
+## Do
+
+- Process pending jobs FIFO.
+- Simulate the send. Log the campaign id, the recipient, success, and campaign completion.
+- Set the email job to `sent` on success and `failed` on failure.
+- Move the campaign from `queued` to `processing` to `done`.
+- Skip a job that is no longer `pending`.
+
+## Do not
+
+- Call a real mail provider.
+- Let one recipient failure stop the worker.
+- Treat `done` as "every email succeeded". `done` means every job is `sent` or `failed`.
+
+```php
+// ✅ GOOD
+if ($emailJob->status !== EmailJobStatus::Pending) {
+    return;
+}
+```
