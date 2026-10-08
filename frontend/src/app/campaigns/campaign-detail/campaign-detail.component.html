@@ -1,0 +1,52 @@
+<div class="container py-4">
+  <a class="link-secondary" routerLink="/campaigns">Back to campaigns</a>
+
+  @if (loading()) {
+    <p class="text-secondary mt-3" role="status">Loading campaign…</p>
+  } @else if (error()) {
+    <div class="alert alert-danger mt-3" role="alert">{{ error() }}</div>
+  } @else {
+    @if (campaign(); as item) {
+      <div class="mt-3">
+        <h1 class="h3">{{ item.name }}</h1>
+        <p class="text-secondary">Submitted {{ item.created_at }}</p>
+
+        <dl class="row">
+          <dt class="col-sm-3">Subject</dt>
+          <dd class="col-sm-9">{{ item.subject }}</dd>
+
+          <dt class="col-sm-3">Status</dt>
+          <dd class="col-sm-9 text-capitalize">{{ item.status }}</dd>
+
+          <dt class="col-sm-3">Recipients</dt>
+          <dd class="col-sm-9">{{ item.recipient_count }}</dd>
+
+          <dt class="col-sm-3">Body</dt>
+          <dd class="col-sm-9">
+            <pre class="mb-0 text-wrap">{{ item.body }}</pre>
+          </dd>
+        </dl>
+
+        <h2 class="h5 mt-4">Recipient status</h2>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>Recipient</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (recipient of item.recipients; track recipient.recipient_email) {
+                <tr>
+                  <td>{{ recipient.recipient_email }}</td>
+                  <td class="text-capitalize">{{ recipient.status }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  }
+</div>

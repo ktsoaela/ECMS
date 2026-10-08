@@ -1,0 +1,75 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h1 class="h3 mb-3">Create campaign</h1>
+      <p class="text-secondary mb-4">Submit a campaign and queue emails for each recipient.</p>
+
+      @if (success(); as result) {
+        <div class="alert alert-success" role="status">
+          Campaign created. ID {{ result.campaignId }} with {{ result.recipientCount }} recipients.
+          <a routerLink="/campaigns/{{ result.campaignId }}">View details</a>
+        </div>
+      }
+
+      @if (apiError()) {
+        <div class="alert alert-danger" role="alert">{{ apiError() }}</div>
+      }
+
+      @if (clientError()) {
+        <div class="alert alert-warning" role="alert">{{ clientError() }}</div>
+      }
+
+      <form class="vstack gap-3" [formGroup]="form" (ngSubmit)="submit()">
+        <div>
+          <label class="form-label" for="name">Campaign name</label>
+          <input id="name" class="form-control" formControlName="name" />
+          @if (fieldErrors()['name']) {
+            <div class="form-text text-danger">{{ fieldErrors()['name'] }}</div>
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="subject">Subject</label>
+          <input id="subject" class="form-control" formControlName="subject" />
+          @if (fieldErrors()['subject']) {
+            <div class="form-text text-danger">{{ fieldErrors()['subject'] }}</div>
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="body">Email body</label>
+          <textarea id="body" class="form-control" rows="6" formControlName="body"></textarea>
+          @if (fieldErrors()['body']) {
+            <div class="form-text text-danger">{{ fieldErrors()['body'] }}</div>
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="recipients">Recipient emails</label>
+          <textarea
+            id="recipients"
+            class="form-control"
+            rows="5"
+            formControlName="recipients"
+            placeholder="one email per line"
+          ></textarea>
+          <div class="form-text">One email per line. Duplicates are rejected.</div>
+          @if (fieldErrors()['recipient_emails']) {
+            <div class="form-text text-danger">{{ fieldErrors()['recipient_emails'] }}</div>
+          }
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" type="submit" [disabled]="loading()">
+            @if (loading()) {
+              Submitting…
+            } @else {
+              Submit campaign
+            }
+          </button>
+          <a class="btn btn-outline-secondary" routerLink="/campaigns">View campaigns</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

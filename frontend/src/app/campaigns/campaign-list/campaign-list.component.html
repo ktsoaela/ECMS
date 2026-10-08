@@ -1,0 +1,47 @@
+<div class="container py-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Campaigns</h1>
+      <p class="text-secondary mb-0">Submitted campaigns and their processing status.</p>
+    </div>
+    <a class="btn btn-primary" routerLink="/campaigns/new">Create campaign</a>
+  </div>
+
+  @if (loading()) {
+    <p class="text-secondary" role="status">Loading campaigns…</p>
+  } @else if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  } @else if (campaigns().length === 0) {
+    <div class="border rounded p-4 text-center">
+      <p class="mb-3">No campaigns yet.</p>
+      <a class="btn btn-outline-primary" routerLink="/campaigns/new">Create your first campaign</a>
+    </div>
+  } @else {
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th>Subject</th>
+            <th>Recipients</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (campaign of campaigns(); track campaign.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/campaigns', campaign.id]">{{ campaign.name }}</a>
+              </td>
+              <td>{{ campaign.subject }}</td>
+              <td>{{ campaign.recipient_count }}</td>
+              <td class="text-capitalize">{{ campaign.status }}</td>
+              <td>{{ campaign.created_at }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
