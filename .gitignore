@@ -6,3 +6,6 @@ poa.md
 .env
 .env.*
 !.env.example
+
+# Docker
+docker-compose.override.yml
