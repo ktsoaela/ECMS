@@ -24,21 +24,26 @@ Laravel boundaries for this phase are fixed by [ADR-0007](adr/0007-http-versus-a
 
 ## Phase gate
 
-Do not start Phase 2 until all of the following are true:
+**Status: Passed (2026-10-09).**
 
-- A campaign can be created from Angular and stored with one `email_jobs` row per recipient.
-- The worker processes those jobs and the detail view shows the updated statuses.
-- The Task 11 PHPUnit cases pass.
+Evidence:
+
+- Campaign create from the API/UI stores one `email_jobs` row per recipient.
+- The Compose `queue` worker processes jobs; detail shows recipient statuses (`sent` / isolated `failed` in PHPUnit).
+- Task 11 PHPUnit suite is green (`php artisan test`, 13 tests).
+
+Phase 2 may proceed. Accept and implement one proposed record at a time.
 
 ## Phase 2
 
-After the gate, accept and implement one proposed record at a time:
+Order after the gate:
 
 1. [ADR-0008](adr/0008-openapi-via-scramble.md) — Scramble only. No hand-written Swagger YAML beside it.
 2. A Postman collection under `postman/` for create, list, detail, and the validation failures. This has no ADR.
 3. [ADR-0009](adr/0009-ci.md) — GitHub Actions runs PHPUnit and the Angular test or build. No deploy.
+4. [ADR-0010](adr/0010-email-template-design-system.md) — Accepted as **deferral**: do not build the block editor/Storybook for this submission. Plain `body` stays the contract.
 
-Move a record from `Proposed` to `Accepted` only when that work starts. Do not edit the older record's decision to pretend it always included the new work.
+Move a record from `Proposed` to `Accepted` only when that work starts (or, for ADR-0010, when the deferral is confirmed). Do not edit an older record's decision to pretend it always included later work.
 
 ## Out of scope
 

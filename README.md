@@ -28,9 +28,9 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 | [0005](docs/adr/0005-atomic-campaign-creation.md) | Transaction, then dispatch after commit | Accepted |
 | [0006](docs/adr/0006-processing-pipeline-not-etl.md) | Processing pipeline, not ETL | Accepted |
 | [0007](docs/adr/0007-http-versus-application-boundary.md) | Thin controller, `CampaignService`, API resources | Accepted |
-| [0008](docs/adr/0008-openapi-via-scramble.md) | OpenAPI via Scramble | Proposed |
-| [0009](docs/adr/0009-ci.md) | GitHub Actions tests/build | Proposed |
-| [0010](docs/adr/0010-email-template-design-system.md) | Block editor + Storybook deferred | Proposed |
+| [0008](docs/adr/0008-openapi-via-scramble.md) | OpenAPI via Scramble | Accepted |
+| [0009](docs/adr/0009-ci.md) | GitHub Actions tests/build | Accepted |
+| [0010](docs/adr/0010-email-template-design-system.md) | Block editor + Storybook deferred | Accepted |
 
 ## Assumptions
 
@@ -51,8 +51,9 @@ These are intentional gaps, not accidental omissions. See [`TODO.md`](TODO.md).
 | --- | --- |
 | **Block editor** (Header / Text / Image / Button), sidebar edit, live preview | Brief technology note; Tasks 1–11 only require a string `body`. Deferred in [ADR-0010](docs/adr/0010-email-template-design-system.md) under the 8–12h budget so create/queue/list/detail ship first. |
 | **Storybook** | Paired with the block editor; deferred with ADR-0010. |
-| **Scramble OpenAPI, Postman collection, CI** | Phase 2 after the [phase gate](docs/guardrails.md). |
 | **Auth, real mail, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
+
+Phase 2 after the gate: Scramble at http://localhost:8000/docs/api, Postman under [`postman/`](postman/Email_Campaigns_API.postman_collection.json), CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Quick start (Docker)
 

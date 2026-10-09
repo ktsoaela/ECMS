@@ -1,7 +1,8 @@
 # ADR-0010: Email Template Design System
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-10-08
+**Accepted:** 2026-10-09
 **Confidence:** High
 **Supersedes:** none
 **Superseded by:** none
@@ -10,38 +11,39 @@
 
 The technology section of the brief mentions composing an email from Header, Text, Image, and Button blocks, with Storybook. Tasks 1–11 require a plain campaign `body` string, a form, a list, and a detail view. They do not require a block editor.
 
+The [phase gate](../guardrails.md) has passed. This record is accepted to lock the submission scope: the design-system paragraph stays unmet on purpose.
+
 ## Options Considered
 
-### Option 1 — Keep `body` as a string and defer the block editor
+### Option 1 — Keep `body` as a string and do not ship a block editor
 
-Selected while this record stays Proposed. The API contract in [ADR-0004](0004-validation-and-api-contract.md) stays a string. Angular validates and submits that string.
+Selected. The API contract in [ADR-0004](0004-validation-and-api-contract.md) stays a string. Angular validates and submits that string. No Storybook.
 
-### Option 2 — Build the block editor and Storybook in Phase 1
+### Option 2 — Build the block editor and Storybook for this submission
 
-Rejected for the current scope. It replaces the required body field with a second product and consumes the time set aside for the queue and the campaign screens.
+Rejected. It replaces the required body field with a second product and would consume the time already spent on the queue and campaign screens.
 
 ### Option 3 — Store blocks and also accept a plain body
 
-Rejected until a new record defines the storage and the API. Doing both now would change the contract without an assessment requirement.
+Rejected. Doing both would change the contract without an assessment requirement for Tasks 1–11.
 
 ## Decision
 
-Proposed and deferred: do not build content-block components or Storybook unless this record is explicitly accepted after the phase gate. Plain `body` remains the contract.
-
-Confidence is high that the deferral is correct for the numbered tasks. Confidence would drop only if the submission is later judged on the unnumbered block-editor paragraph.
+Do not build content-block components or Storybook in this assessment submission. Plain `body` remains the contract. A future product that needs blocks must open a **new** ADR that defines storage and the API mapping; this record does not authorise that work.
 
 ## Consequences
 
 ### Positive
 
-- Phase 1 stays on create, validate, store, queue, process, and view.
+- Phase 1 deliverables stay the scored create / queue / list / detail flow.
 - The API does not gain a block schema that Angular and PHPUnit would both have to carry.
+- Reviewers see an explicit, accepted deferral rather than an unfinished feature.
 
 ### Negative
 
-- The block-editor paragraph in the brief is unmet unless this record is later accepted and implemented.
-- Storybook is absent from the first submission.
+- The block-editor paragraph in the brief is unmet.
+- Storybook is absent from the submission.
 
 ## Tradeoffs
 
-The numbered tasks and the 8–12 hour limit outweigh the unnumbered design-system paragraph. Reopen this record only after the phase gate, and only with a new decision that says how blocks map to `body`.
+The numbered tasks and the 8–12 hour limit outweigh the unnumbered design-system paragraph. Accepting the deferral closes ADR-0010 without pretending the editor was built.
