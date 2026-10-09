@@ -1,0 +1,135 @@
+{
+  "info": {
+    "name": "Email Campaigns API",
+    "description": "Create, list, detail, and validation failures for the assessment API. Base URL defaults to local Docker.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "campaignId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create campaign (201)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "const body = pm.response.json();",
+              "pm.test('Returns campaign_id, recipient_count, status', function () {",
+              "  pm.expect(body).to.have.property('campaign_id');",
+              "  pm.expect(body).to.have.property('recipient_count');",
+              "  pm.expect(body.status).to.eql('queued');",
+              "});",
+              "if (body.campaign_id) { pm.collectionVariables.set('campaignId', String(body.campaign_id)); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Postman smoke\",\n  \"subject\": \"Hello\",\n  \"body\": \"Campaign body for Postman.\",\n  \"recipient_emails\": [\"alice@example.com\", \"bob@example.com\"]\n}"
+        },
+        "url": "{{baseUrl}}/campaigns"
+      }
+    },
+    {
+      "name": "List campaigns (200)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Accept", "value": "application/json" }],
+        "url": "{{baseUrl}}/campaigns"
+      }
+    },
+    {
+      "name": "Campaign detail (200)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Accept", "value": "application/json" }],
+        "url": "{{baseUrl}}/campaigns/{{campaignId}}"
+      }
+    },
+    {
+      "name": "Create campaign — missing fields (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 422', function () { pm.response.to.have.status(422); });",
+              "const body = pm.response.json();",
+              "pm.test('Invalid input shape', function () {",
+              "  pm.expect(body.error).to.eql('Invalid input');",
+              "  pm.expect(body.details).to.be.an('object');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": "{{baseUrl}}/campaigns"
+      }
+    },
+    {
+      "name": "Create campaign — invalid email (422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Bad email\",\n  \"subject\": \"Hi\",\n  \"body\": \"Body\",\n  \"recipient_emails\": [\"not-an-email\"]\n}"
+        },
+        "url": "{{baseUrl}}/campaigns"
+      }
+    },
+    {
+      "name": "Create campaign — duplicate emails (422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Dupes\",\n  \"subject\": \"Hi\",\n  \"body\": \"Body\",\n  \"recipient_emails\": [\"Same@Example.com\", \"same@example.com\"]\n}"
+        },
+        "url": "{{baseUrl}}/campaigns"
+      }
+    },
+    {
+      "name": "Unknown campaign (404)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Accept", "value": "application/json" }],
+        "url": "{{baseUrl}}/campaigns/999999"
+      }
+    }
+  ]
+}
