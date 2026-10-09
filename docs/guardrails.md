@@ -41,9 +41,9 @@ Order after the gate:
 1. [ADR-0008](adr/0008-openapi-via-scramble.md) — Scramble only. No hand-written Swagger YAML beside it.
 2. A Postman collection under `postman/` for create, list, detail, and the validation failures. This has no ADR.
 3. [ADR-0009](adr/0009-ci.md) — GitHub Actions runs PHPUnit and the Angular test or build. No deploy.
-4. [ADR-0010](adr/0010-email-template-design-system.md) — Accepted as **deferral**: do not build the block editor/Storybook for this submission. Plain `body` stays the contract.
+4. [ADR-0011](adr/0011-email-block-composer.md) — Minimal block composer + Storybook; serialize into the existing `body` string (supersedes ADR-0010).
 
-Move a record from `Proposed` to `Accepted` only when that work starts (or, for ADR-0010, when the deferral is confirmed). Do not edit an older record's decision to pretend it always included later work.
+Move a record from `Proposed` to `Accepted` only when that work starts. Do not edit an older record's decision to pretend it always included later work; supersede with a new record instead.
 
 ## Out of scope
 
@@ -54,7 +54,7 @@ Do not add these unless a new ADR accepts them because a requirement needs them:
 - Authentication.
 - A real mail provider.
 - NgRx or another complex client state library.
-- The Header, Text, Image, and Button editor, and Storybook. [ADR-0010](adr/0010-email-template-design-system.md). `body` stays a string.
+- Structured block storage in MySQL (composer serializes to `body` only). [ADR-0011](adr/0011-email-block-composer.md).
 
 ## Status
 

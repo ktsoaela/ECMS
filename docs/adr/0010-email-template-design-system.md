@@ -1,11 +1,11 @@
 # ADR-0010: Email Template Design System
 
-**Status:** Accepted
+**Status:** Superseded
 **Date:** 2026-10-08
 **Accepted:** 2026-10-09
 **Confidence:** High
 **Supersedes:** none
-**Superseded by:** none
+**Superseded by:** [ADR-0011](0011-email-block-composer.md)
 
 ## Context
 
