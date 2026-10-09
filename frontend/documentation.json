@@ -1,0 +1,19 @@
+{
+  "pipes": [],
+  "interfaces": [],
+  "injectables": [],
+  "classes": [],
+  "directives": [],
+  "components": [],
+  "modules": [],
+  "miscellaneous": {
+    "variables": [],
+    "functions": [],
+    "typealiases": [],
+    "enumerations": [],
+    "groupedVariables": {},
+    "groupedFunctions": {},
+    "groupedEnumerations": {},
+    "groupedTypeAliases": {}
+  }
+}
