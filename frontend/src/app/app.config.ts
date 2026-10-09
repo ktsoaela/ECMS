@@ -1,13 +1,15 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 
-// CSR only via `ng serve` in Docker — client hydration without SSR hangs HttpClient.
+// CSR via `ng serve` in Docker (no SSR). Default XHR HttpClient stays zone-patched;
+// withFetch + hydration left the campaigns list stuck on Loading.
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withFetch()),
+    provideHttpClient(),
   ],
 };
+
