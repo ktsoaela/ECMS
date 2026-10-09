@@ -118,6 +118,9 @@
               "-d",
               "."
             ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "port": 6006
           }
         },
@@ -132,6 +135,9 @@
               "json",
               "-d",
               "."
+            ],
+            "styles": [
+              "src/styles.scss"
             ],
             "outputDir": "storybook-static"
           }
