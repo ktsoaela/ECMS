@@ -1,20 +1,21 @@
 # ADR-0008: OpenAPI via Scramble
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-10-08
+**Accepted:** 2026-10-09
 **Confidence:** Medium
 **Supersedes:** none
 **Superseded by:** none
 
 ## Context
 
-Reviewers need a readable description of `POST /api/campaigns`, `GET /api/campaigns`, and `GET /api/campaigns/{id}`. The core flow does not depend on generated documentation. This record is not implemented until the phase gate in [guardrails.md](../guardrails.md) has passed.
+Reviewers need a readable description of `POST /api/campaigns`, `GET /api/campaigns`, and `GET /api/campaigns/{id}`. The core flow does not depend on generated documentation. The [phase gate](../guardrails.md) has passed, so documentation of the working API is now in scope.
 
 ## Options Considered
 
 ### Option 1 — Scramble generates OpenAPI from Laravel routes, form requests, and API resources
 
-Selected when this record is accepted. One generator stays aligned with the code.
+Selected. One generator stays aligned with the code.
 
 ### Option 2 — A hand-written OpenAPI file plus Scramble
 
@@ -22,13 +23,11 @@ Rejected. Two sources will drift.
 
 ### Option 3 — No API documentation beyond the README
 
-Acceptable until the phase gate. It stops being enough once the API is stable and a reviewer needs an interactive reference.
+Rejected after the phase gate. The API is stable enough for an interactive reference.
 
 ## Decision
 
-Proposed: adopt Scramble as the only OpenAPI source after Phase 1 works end to end. Do not add a second Swagger YAML document.
-
-This record does not authorise implementing Scramble before the phase gate.
+Adopt Scramble (`dedoc/scramble`) as the only OpenAPI source. Do not add a second hand-written Swagger YAML document. Docs UI: `/docs/api`. Spec JSON: `/docs/api.json`.
 
 ## Consequences
 
@@ -39,9 +38,9 @@ This record does not authorise implementing Scramble before the phase gate.
 
 ### Negative
 
-- Scramble is another PHP dependency and must be kept compatible with the installed Laravel version.
+- Scramble is another PHP dependency and must stay compatible with the installed Laravel version.
 - Generated docs still need a human check against [ADR-0004](0004-validation-and-api-contract.md).
 
 ## Tradeoffs
 
-Waiting keeps the first implementation on the required flow. Adopting Scramble later is justified only as documentation of a working API, not as a second implementation of validation.
+Waiting until after Phase 1 kept the first implementation on the required flow. Scramble documents a working API; it is not a second implementation of validation.
