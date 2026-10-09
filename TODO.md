@@ -8,7 +8,7 @@ Tracking polish and deferred work for submission. Phase 1 (Tasks 1–11) is impl
 | --- | --- | --- |
 | 1 | Commit `app.config.ts` HttpClient fix (no `withFetch` / no client hydration under `ng serve`) | Done |
 | 2 | README: Assumptions, Not completed, database/migrate, queue worker, ADR links | Done |
-| 3 | Smoke happy path: create → worker → detail statuses → `php artisan test` green | In progress |
+| 3 | Smoke happy path: create → worker → detail statuses → `php artisan test` green | Done (13 tests; create→queue→detail `sent`) |
 
 ## Deferred (intentional)
 
