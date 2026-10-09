@@ -5,24 +5,25 @@ alwaysApply: true
 
 # Project scope
 
-The Phase 1 gate in `docs/guardrails.md` has **passed**. Accepted ADRs **0001–0010** are the architecture. ADR-0010 accepts deferring the block editor and Storybook (plain `body` stays the contract).
+The Phase 1 gate in `docs/guardrails.md` has **passed**. Accepted ADRs **0001–0009** and **0011** are current. ADR-0010 is superseded by ADR-0011 (minimal block composer + Storybook; serialize to `body`).
 
 ## Do
 
 - Keep `POST /api/campaigns`, `GET /api/campaigns`, and `GET /api/campaigns/{id}` as the API surface.
-- Keep the queue worker, Angular create/list/detail, and Task 11 PHPUnit green.
-- Keep Scramble (`/docs/api`), the Postman collection under `postman/`, and `.github/workflows/ci.yml` aligned with the code.
+- Keep the queue worker, Angular create/list/detail, email block composer, and Task 11 PHPUnit green.
+- Keep Scramble (`/docs/api`), Storybook, Postman, and `.github/workflows/ci.yml` aligned with the code.
 
 ## Do not
 
-- Add Kafka, RabbitMQ, Redis, Kubernetes, microservices, Elasticsearch, Terraform, AWS deploy, authentication, a real mail provider, ETL, NgRx, Storybook, or the block editor (ADR-0010).
+- Add Kafka, RabbitMQ, Redis, Kubernetes, microservices, Elasticsearch, Terraform, AWS deploy, authentication, a real mail provider, ETL, or NgRx.
+- Change the API/database to store structured blocks without a new ADR.
 - Edit an accepted ADR into a different decision. Write a new record and link it.
 - Hand-write a second OpenAPI/Swagger YAML beside Scramble (ADR-0008).
 
 ```text
-# ❌ New product scope without a new ADR
-composer require storybook / block editor packages
+# ❌ New persistence for blocks without a new ADR
+alter email_blocks table
 
 # ✅ Stay on the accepted assessment flow
-POST /api/campaigns → MySQL → queue → Angular → /docs/api
+blocks → serialize → body → POST /api/campaigns → queue → Angular
 ```

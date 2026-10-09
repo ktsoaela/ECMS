@@ -7,6 +7,6 @@ This repository is an email campaign assessment: Angular, a Laravel API, MySQL, 
 - [docs/adr/README.md](docs/adr/README.md) — accepted decisions (0001–0010). Do not edit an accepted decision in place.
 - [docs/patterns.md](docs/patterns.md) — patterns that are in use and patterns that are waiting.
 
-Phase 1 (ADR-0001–0007) and Phase 2 close-out (Scramble, Postman, CI, ADR-0010 deferral) are in place. Do not build the block editor or Storybook unless a **new** ADR supersedes ADR-0010.
+Phase 1 (ADR-0001–0007), Phase 2 (Scramble, Postman, CI), and ADR-0011 (minimal block composer + Storybook) are in place. Do not add structured block persistence without a **new** ADR.
 
 `poa.md` is local research notes. It is gitignored and is not the submission README.

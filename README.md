@@ -30,7 +30,8 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 | [0007](docs/adr/0007-http-versus-application-boundary.md) | Thin controller, `CampaignService`, API resources | Accepted |
 | [0008](docs/adr/0008-openapi-via-scramble.md) | OpenAPI via Scramble | Accepted |
 | [0009](docs/adr/0009-ci.md) | GitHub Actions tests/build | Accepted |
-| [0010](docs/adr/0010-email-template-design-system.md) | Block editor + Storybook deferred | Accepted |
+| [0010](docs/adr/0010-email-template-design-system.md) | Block editor deferred (superseded) | Superseded |
+| [0011](docs/adr/0011-email-block-composer.md) | Minimal block composer + Storybook | Accepted |
 
 ## Assumptions
 
@@ -45,15 +46,24 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 
 ## Not completed / functionality deferred
 
-These are intentional gaps, not accidental omissions. See [`TODO.md`](TODO.md).
+See [`TODO.md`](TODO.md) for follow-ups.
 
-| Item | Why |
+| Item | Status |
 | --- | --- |
-| **Block editor** (Header / Text / Image / Button), sidebar edit, live preview | Brief technology note; Tasks 1–11 only require a string `body`. Deferred in [ADR-0010](docs/adr/0010-email-template-design-system.md) under the 8–12h budget so create/queue/list/detail ship first. |
-| **Storybook** | Paired with the block editor; deferred with ADR-0010. |
+| **Block editor + Storybook** | Implemented as a minimal composer ([ADR-0011](docs/adr/0011-email-block-composer.md)). Blocks serialize into the existing `body` string; no API schema change. |
 | **Auth, real mail, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
 
-Phase 2 after the gate: Scramble at http://localhost:8000/docs/api, Postman under [`postman/`](postman/Email_Campaigns_API.postman_collection.json), CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+Phase 2 extras: Scramble at http://localhost:8000/docs/api, Postman under [`postman/`](postman/Email_Campaigns_API.postman_collection.json), CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+
+### Storybook
+
+From `frontend/`:
+
+```bash
+npm run storybook
+```
+
+Opens the Storybook UI (default http://localhost:6006) with Header, Text, Image, Button, and Preview stories under **EmailBlocks**.
 
 ## Quick start (Docker)
 
