@@ -38,7 +38,7 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 - Mail is **simulated** (no real mail provider).
 - There is **no authentication**.
 - Queue driver is `database`.
-- Campaign `body` is a **plain string** (not a block document).
+- Campaign `body` is a **string** (plain text or HTML serialized from the block composer; max 10,000 characters).
 - Duplicate emails are detected after trim + lowercase.
 - Pagination is omitted.
 - Angular calls only the Laravel API; CORS allows `http://localhost:4200` only.
@@ -53,17 +53,30 @@ See [`TODO.md`](TODO.md) for follow-ups.
 | **Block editor + Storybook** | Implemented as a minimal composer ([ADR-0011](docs/adr/0011-email-block-composer.md)). Blocks serialize into the existing `body` string; no API schema change. |
 | **Auth, real mail, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
 
-Phase 2 extras: Scramble at http://localhost:8000/docs/api, Postman under [`postman/`](postman/Email_Campaigns_API.postman_collection.json), CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+Phase 2 extras: Postman under [`postman/`](postman/Email_Campaigns_API.postman_collection.json), CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+
+### Useful local URLs
+
+| What | URL | Notes |
+| --- | --- | --- |
+| Angular app | http://localhost:4200 | Create / list / detail campaigns |
+| Laravel API | http://localhost:8000/api | Campaign endpoints |
+| API health | http://localhost:8000/up | Compose backend health check |
+| **Scramble OpenAPI UI** | http://localhost:8000/docs/api | Available when the backend is running (`APP_ENV=local`) |
+| Scramble OpenAPI JSON | http://localhost:8000/docs/api.json | Machine-readable spec |
+| **Storybook** | http://localhost:6006 | EmailBlocks stories (start separately — see below) |
 
 ### Storybook
 
-From `frontend/`:
+Storybook is not part of `docker compose up`. From `frontend/` on the host (Node 20+):
 
 ```bash
+cd frontend
+npm ci
 npm run storybook
 ```
 
-Opens the Storybook UI (default http://localhost:6006) with Header, Text, Image, Button, and Preview stories under **EmailBlocks**.
+Then open **http://localhost:6006**. Stories for Header, Text, Image, Button, and Preview are under **EmailBlocks**.
 
 ## Quick start (Docker)
 
@@ -119,12 +132,14 @@ docker compose up -d --build
 docker compose up -d --build
 ```
 
-| Service   | URL / port            | Role                        |
-|-----------|-----------------------|-----------------------------|
-| frontend  | http://localhost:4200 | Angular app                 |
-| backend   | http://localhost:8000 | Laravel API                 |
-| mysql     | localhost:3306        | MySQL 8                     |
-| queue     | (worker)              | Processes queued email jobs |
+| Service   | URL / port                         | Role                        |
+|-----------|------------------------------------|-----------------------------|
+| frontend  | http://localhost:4200              | Angular app                 |
+| backend   | http://localhost:8000              | Laravel API                 |
+| OpenAPI   | http://localhost:8000/docs/api     | Scramble docs UI            |
+| mysql     | localhost:3306                     | MySQL 8                     |
+| queue     | (worker)                           | Processes queued email jobs |
+| Storybook | http://localhost:6006 (host only)  | `npm run storybook` in `frontend/` |
 
 ### 4. Queue worker
 
@@ -221,3 +236,5 @@ Default Docker workflow keeps `DB_HOST=mysql` and:
 
 - App: http://localhost:4200
 - API: http://localhost:8000 (health: http://localhost:8000/up)
+- Scramble: http://localhost:8000/docs/api
+- Storybook (host): http://localhost:6006 after `npm run storybook` in `frontend/`

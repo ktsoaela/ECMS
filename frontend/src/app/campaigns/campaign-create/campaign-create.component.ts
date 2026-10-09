@@ -41,6 +41,11 @@ export class CampaignCreateComponent {
     this.form.controls.body.markAsDirty();
   }
 
+  showInvalid(controlName: 'name' | 'subject' | 'body' | 'recipients'): boolean {
+    const control = this.form.controls[controlName];
+    return control.invalid && (control.touched || control.dirty);
+  }
+
   submit(): void {
     this.success.set(null);
     this.apiError.set(null);
@@ -120,3 +125,4 @@ export class CampaignCreateComponent {
     return null;
   }
 }
+

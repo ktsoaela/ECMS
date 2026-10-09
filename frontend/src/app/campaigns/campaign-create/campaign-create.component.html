@@ -3,7 +3,8 @@
     <div class="col-12">
       <h1 class="h3 mb-3">Create campaign</h1>
       <p class="text-secondary mb-4">
-        Compose the email from content blocks, then submit recipients to the API.
+        Fields marked with <span class="text-danger">*</span> are required. Compose the email from
+        content blocks, then submit recipients to the API.
       </p>
 
       @if (success(); as result) {
@@ -21,19 +22,49 @@
         <div class="alert alert-warning" role="alert">{{ clientError() }}</div>
       }
 
-      <form class="vstack gap-4" [formGroup]="form" (ngSubmit)="submit()">
+      <form class="vstack gap-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label" for="name">Campaign name</label>
-            <input id="name" class="form-control" formControlName="name" />
+            <label class="form-label" for="name">
+              Campaign name <span class="text-danger" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="name"
+              class="form-control"
+              formControlName="name"
+              placeholder="e.g. Spring Sale"
+              autocomplete="off"
+              [class.is-invalid]="showInvalid('name')"
+            />
+            @if (showInvalid('name') && form.controls.name.hasError('required')) {
+              <div class="invalid-feedback d-block">Campaign name is required.</div>
+            }
+            @if (showInvalid('name') && form.controls.name.hasError('maxlength')) {
+              <div class="invalid-feedback d-block">Campaign name must be at most 255 characters.</div>
+            }
             @if (fieldErrors()['name']) {
               <div class="form-text text-danger">{{ fieldErrors()['name'] }}</div>
             }
           </div>
 
           <div class="col-md-6">
-            <label class="form-label" for="subject">Subject</label>
-            <input id="subject" class="form-control" formControlName="subject" />
+            <label class="form-label" for="subject">
+              Subject <span class="text-danger" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="subject"
+              class="form-control"
+              formControlName="subject"
+              placeholder="e.g. 50% Off This Weekend!"
+              autocomplete="off"
+              [class.is-invalid]="showInvalid('subject')"
+            />
+            @if (showInvalid('subject') && form.controls.subject.hasError('required')) {
+              <div class="invalid-feedback d-block">Subject is required.</div>
+            }
+            @if (showInvalid('subject') && form.controls.subject.hasError('maxlength')) {
+              <div class="invalid-feedback d-block">Subject must be at most 255 characters.</div>
+            }
             @if (fieldErrors()['subject']) {
               <div class="form-text text-danger">{{ fieldErrors()['subject'] }}</div>
             }
@@ -42,25 +73,42 @@
 
         <div>
           <div class="d-flex justify-content-between align-items-baseline mb-2">
-            <label class="form-label mb-0">Email body (blocks)</label>
+            <label class="form-label mb-0">
+              Email body (blocks) <span class="text-danger" aria-hidden="true">*</span>
+            </label>
             @if (fieldErrors()['body']) {
               <div class="form-text text-danger mb-0">{{ fieldErrors()['body'] }}</div>
             }
           </div>
-          <app-email-composer (bodyChange)="onBodyChange($event)" />
+          <p class="form-text mt-0">
+            Add Header, Text, Image, or Button blocks. Edit the selected block in the sidebar; the
+            preview updates live.
+          </p>
+          <div [class.border]="showInvalid('body')" [class.border-danger]="showInvalid('body')" class="rounded">
+            <app-email-composer (bodyChange)="onBodyChange($event)" />
+          </div>
+          @if (showInvalid('body') && form.controls.body.hasError('required')) {
+            <div class="invalid-feedback d-block">Add at least one content block for the email body.</div>
+          }
           <input type="hidden" formControlName="body" />
         </div>
 
         <div class="col-lg-6 px-0">
-          <label class="form-label" for="recipients">Recipient emails</label>
+          <label class="form-label" for="recipients">
+            Recipient emails <span class="text-danger" aria-hidden="true">*</span>
+          </label>
           <textarea
             id="recipients"
             class="form-control"
             rows="5"
             formControlName="recipients"
-            placeholder="one email per line"
+            placeholder="alice@example.com&#10;bob@example.com"
+            [class.is-invalid]="showInvalid('recipients') || !!fieldErrors()['recipient_emails']"
           ></textarea>
           <div class="form-text">One email per line. Duplicates are rejected.</div>
+          @if (showInvalid('recipients') && form.controls.recipients.hasError('required')) {
+            <div class="invalid-feedback d-block">At least one recipient email is required.</div>
+          }
           @if (fieldErrors()['recipient_emails']) {
             <div class="form-text text-danger">{{ fieldErrors()['recipient_emails'] }}</div>
           }
@@ -69,7 +117,7 @@
         <div class="d-flex gap-2">
           <button class="btn btn-primary" type="submit" [disabled]="loading()">
             @if (loading()) {
-              Submitting…
+              Submitting???
             } @else {
               Submit campaign
             }
@@ -80,3 +128,4 @@
     </div>
   </div>
 </div>
+
