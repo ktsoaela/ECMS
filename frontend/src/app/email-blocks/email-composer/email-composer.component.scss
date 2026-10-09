@@ -1,0 +1,9 @@
+.email-composer {
+  .list-group {
+    gap: 0.25rem;
+  }
+
+  .list-group-item.active {
+    z-index: 1;
+  }
+}

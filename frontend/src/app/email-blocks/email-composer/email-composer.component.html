@@ -1,0 +1,113 @@
+<div class="email-composer">
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="addBlock('header')">
+      Add Header
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="addBlock('text')">
+      Add Text
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="addBlock('image')">
+      Add Image
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="addBlock('button')">
+      Add Button
+    </button>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-3">
+      <h2 class="h6">Blocks</h2>
+      <ul class="list-group">
+        @for (block of blocks(); track block.id) {
+          <li>
+            <button
+              type="button"
+              class="list-group-item list-group-item-action text-capitalize"
+              [class.active]="block.id === selectedId()"
+              (click)="selectBlock(block.id)"
+            >
+              {{ block.type }}
+            </button>
+          </li>
+        } @empty {
+          <li class="list-group-item text-secondary">No blocks yet.</li>
+        }
+      </ul>
+    </div>
+
+    <div class="col-md-5">
+      <h2 class="h6">Live preview</h2>
+      <app-email-block-preview [blocks]="blocks()" />
+      <p class="form-text mt-2 mb-0">Serialized length: {{ serializedLength() }} / 10000</p>
+    </div>
+
+    <div class="col-md-4">
+      <h2 class="h6">Edit block</h2>
+      @if (selected(); as block) {
+        <div class="border rounded p-3 bg-light">
+          <p class="text-capitalize fw-semibold mb-3">{{ block.type }}</p>
+
+          @switch (block.type) {
+            @case ('header') {
+              <label class="form-label" for="header-text">Headline</label>
+              <input
+                id="header-text"
+                class="form-control"
+                [ngModel]="block.text"
+                (ngModelChange)="patchSelected({ text: $event })"
+              />
+            }
+            @case ('text') {
+              <label class="form-label" for="text-body">Text</label>
+              <textarea
+                id="text-body"
+                class="form-control"
+                rows="5"
+                [ngModel]="block.text"
+                (ngModelChange)="patchSelected({ text: $event })"
+              ></textarea>
+            }
+            @case ('image') {
+              <label class="form-label" for="image-src">Image URL (http/https)</label>
+              <input
+                id="image-src"
+                class="form-control mb-2"
+                [ngModel]="block.src"
+                (ngModelChange)="patchSelected({ src: $event })"
+              />
+              <label class="form-label" for="image-alt">Alt text</label>
+              <input
+                id="image-alt"
+                class="form-control"
+                [ngModel]="block.alt"
+                (ngModelChange)="patchSelected({ alt: $event })"
+              />
+            }
+            @case ('button') {
+              <label class="form-label" for="button-label">Label</label>
+              <input
+                id="button-label"
+                class="form-control mb-2"
+                [ngModel]="block.label"
+                (ngModelChange)="patchSelected({ label: $event })"
+              />
+              <label class="form-label" for="button-href">Link URL (http/https)</label>
+              <input
+                id="button-href"
+                class="form-control"
+                [ngModel]="block.href"
+                (ngModelChange)="patchSelected({ href: $event })"
+              />
+            }
+          }
+
+          <button type="button" class="btn btn-sm btn-outline-danger mt-3" (click)="removeSelected()">
+            Remove block
+          </button>
+        </div>
+      } @else {
+        <p class="text-secondary">Select a block to edit.</p>
+      }
+    </div>
+  </div>
+</div>

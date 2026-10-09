@@ -1,24 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, ViewChild, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { EmailComposerComponent } from '../../email-blocks/email-composer/email-composer.component';
 import { ApiValidationError } from '../campaign.models';
 import { CampaignService } from '../campaign.service';
 
 @Component({
   selector: 'app-campaign-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, EmailComposerComponent],
   templateUrl: './campaign-create.component.html',
   styleUrl: './campaign-create.component.scss',
 })
 export class CampaignCreateComponent {
   private readonly fb = inject(FormBuilder);
   private readonly campaigns = inject(CampaignService);
+
+  @ViewChild(EmailComposerComponent) private composer?: EmailComposerComponent;
 
   readonly loading = signal(false);
   readonly success = signal<{ campaignId: number; recipientCount: number } | null>(null);
@@ -33,12 +36,23 @@ export class CampaignCreateComponent {
     recipients: ['', [Validators.required]],
   });
 
+  onBodyChange(body: string): void {
+    this.form.controls.body.setValue(body);
+    this.form.controls.body.markAsDirty();
+  }
+
   submit(): void {
     this.success.set(null);
     this.apiError.set(null);
     this.fieldErrors.set({});
     this.clientError.set(null);
     this.form.markAllAsTouched();
+
+    const composerError = this.composer?.validationError() ?? null;
+    if (composerError) {
+      this.clientError.set(composerError);
+      return;
+    }
 
     if (this.form.invalid) {
       this.clientError.set('Please fill in all required fields.');
@@ -58,7 +72,7 @@ export class CampaignCreateComponent {
       .create({
         name: this.form.controls.name.value.trim(),
         subject: this.form.controls.subject.value.trim(),
-        body: this.form.controls.body.value.trim(),
+        body: this.form.controls.body.value,
         recipient_emails: emails,
       })
       .subscribe({
@@ -68,7 +82,7 @@ export class CampaignCreateComponent {
             campaignId: response.campaign_id,
             recipientCount: response.recipient_count,
           });
-          this.form.reset();
+          this.form.patchValue({ name: '', subject: '', recipients: '' });
         },
         error: (error: ApiValidationError | Error) => {
           this.loading.set(false);

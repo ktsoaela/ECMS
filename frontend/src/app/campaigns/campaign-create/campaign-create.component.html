@@ -1,8 +1,10 @@
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
+<div class="container-fluid py-4 px-3 px-lg-4">
+  <div class="row">
+    <div class="col-12">
       <h1 class="h3 mb-3">Create campaign</h1>
-      <p class="text-secondary mb-4">Submit a campaign and queue emails for each recipient.</p>
+      <p class="text-secondary mb-4">
+        Compose the email from content blocks, then submit recipients to the API.
+      </p>
 
       @if (success(); as result) {
         <div class="alert alert-success" role="status">
@@ -19,32 +21,37 @@
         <div class="alert alert-warning" role="alert">{{ clientError() }}</div>
       }
 
-      <form class="vstack gap-3" [formGroup]="form" (ngSubmit)="submit()">
-        <div>
-          <label class="form-label" for="name">Campaign name</label>
-          <input id="name" class="form-control" formControlName="name" />
-          @if (fieldErrors()['name']) {
-            <div class="form-text text-danger">{{ fieldErrors()['name'] }}</div>
-          }
+      <form class="vstack gap-4" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="name">Campaign name</label>
+            <input id="name" class="form-control" formControlName="name" />
+            @if (fieldErrors()['name']) {
+              <div class="form-text text-danger">{{ fieldErrors()['name'] }}</div>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label" for="subject">Subject</label>
+            <input id="subject" class="form-control" formControlName="subject" />
+            @if (fieldErrors()['subject']) {
+              <div class="form-text text-danger">{{ fieldErrors()['subject'] }}</div>
+            }
+          </div>
         </div>
 
         <div>
-          <label class="form-label" for="subject">Subject</label>
-          <input id="subject" class="form-control" formControlName="subject" />
-          @if (fieldErrors()['subject']) {
-            <div class="form-text text-danger">{{ fieldErrors()['subject'] }}</div>
-          }
+          <div class="d-flex justify-content-between align-items-baseline mb-2">
+            <label class="form-label mb-0">Email body (blocks)</label>
+            @if (fieldErrors()['body']) {
+              <div class="form-text text-danger mb-0">{{ fieldErrors()['body'] }}</div>
+            }
+          </div>
+          <app-email-composer (bodyChange)="onBodyChange($event)" />
+          <input type="hidden" formControlName="body" />
         </div>
 
-        <div>
-          <label class="form-label" for="body">Email body</label>
-          <textarea id="body" class="form-control" rows="6" formControlName="body"></textarea>
-          @if (fieldErrors()['body']) {
-            <div class="form-text text-danger">{{ fieldErrors()['body'] }}</div>
-          }
-        </div>
-
-        <div>
+        <div class="col-lg-6 px-0">
           <label class="form-label" for="recipients">Recipient emails</label>
           <textarea
             id="recipients"
