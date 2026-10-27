@@ -16,7 +16,12 @@
           <dd class="col-sm-9">{{ item.subject }}</dd>
 
           <dt class="col-sm-3">Status</dt>
-          <dd class="col-sm-9 text-capitalize">{{ item.status }}</dd>
+          <dd class="col-sm-9">
+            <span class="text-capitalize">{{ item.status }}</span>
+            @if (item.status !== 'done') {
+              <span class="text-secondary small ms-2" role="status">Sending — refreshes automatically</span>
+            }
+          </dd>
 
           <dt class="col-sm-3">Recipients</dt>
           <dd class="col-sm-9">{{ item.recipient_count }}</dd>
@@ -44,7 +49,14 @@
               @for (recipient of item.recipients; track recipient.recipient_email) {
                 <tr>
                   <td>{{ recipient.recipient_email }}</td>
-                  <td class="text-capitalize">{{ recipient.status }}</td>
+                  <td>
+                    <span
+                      class="badge text-capitalize"
+                      [class.text-bg-success]="recipient.status === 'sent'"
+                      [class.text-bg-danger]="recipient.status === 'failed'"
+                      [class.text-bg-secondary]="recipient.status === 'pending'"
+                    >{{ recipient.status }}</span>
+                  </td>
                 </tr>
               }
             </tbody>

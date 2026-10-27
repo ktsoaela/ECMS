@@ -1,9 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, SecurityContext, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, SecurityContext, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CampaignDetail } from '../campaign.models';
 import { CampaignService } from '../campaign.service';
+
+/** How often the detail view re-reads a campaign the worker is still sending. */
+const REFRESH_MS = 3000;
 
 @Component({
   selector: 'app-campaign-detail',
@@ -22,6 +26,13 @@ export class CampaignDetailComponent implements OnInit {
   readonly campaign = signal<CampaignDetail | null>(null);
   readonly safeBodyHtml = signal<string | null>(null);
 
+  private readonly destroyRef = inject(DestroyRef);
+  private refreshTimer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor() {
+    this.destroyRef.onDestroy(() => this.stopRefresh());
+  }
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!Number.isFinite(id) || id <= 0) {
@@ -30,7 +41,13 @@ export class CampaignDetailComponent implements OnInit {
       return;
     }
 
-    this.campaignsApi.get(id).subscribe({
+    this.load(id);
+  }
+
+  private load(id: number): void {
+    this.stopRefresh();
+
+    this.campaignsApi.get(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (campaign) => {
         this.campaign.set(campaign);
         // Use Angular sanitization only — never bypassSecurityTrustHtml.
@@ -38,11 +55,22 @@ export class CampaignDetailComponent implements OnInit {
           this.sanitizer.sanitize(SecurityContext.HTML, campaign.body)
         );
         this.loading.set(false);
+
+        if (campaign.status !== 'done') {
+          this.refreshTimer = setTimeout(() => this.load(id), REFRESH_MS);
+        }
       },
       error: (error: Error) => {
         this.error.set(error.message);
         this.loading.set(false);
       },
     });
+  }
+
+  private stopRefresh(): void {
+    if (this.refreshTimer !== null) {
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = null;
+    }
   }
 }
