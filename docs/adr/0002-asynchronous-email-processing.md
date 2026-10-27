@@ -1,10 +1,10 @@
 # ADR-0002: Asynchronous Email Processing
 
-**Status:** Accepted
+**Status:** Superseded
 **Date:** 2026-10-08
 **Confidence:** High
 **Supersedes:** none
-**Superseded by:** none
+**Superseded by:** [ADR-0012](0012-smtp-delivery-via-laravel-mailer.md)
 
 ## Context
 

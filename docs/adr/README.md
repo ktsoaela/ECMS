@@ -7,7 +7,7 @@ Records stay short. Implementation detail lives in [guardrails.md](../guardrails
 | ADR | Decision | Status | Confidence |
 | --- | --- | --- | --- |
 | [0001](0001-application-architecture.md) | Angular, Laravel API, MySQL, Laravel Queue | Accepted | High |
-| [0002](0002-asynchronous-email-processing.md) | One queued job per recipient on the database queue | Accepted | High |
+| [0002](0002-asynchronous-email-processing.md) | One queued job per recipient on the database queue | Superseded | High |
 | [0003](0003-persistence.md) | `campaigns` and `email_jobs` with status enums | Accepted | High |
 | [0004](0004-validation-and-api-contract.md) | Form-request validation and fixed JSON contracts | Accepted | High |
 | [0005](0005-atomic-campaign-creation.md) | Transaction, then dispatch after commit | Accepted | High |
@@ -17,7 +17,8 @@ Records stay short. Implementation detail lives in [guardrails.md](../guardrails
 | [0009](0009-ci.md) | GitHub Actions test and build, no deploy | Accepted | Medium |
 | [0010](0010-email-template-design-system.md) | Block editor and Storybook deferred | Superseded | High |
 | [0011](0011-email-block-composer.md) | Minimal block composer + Storybook; serialize to `body` | Accepted | Medium |
+| [0012](0012-smtp-delivery-via-laravel-mailer.md) | Real SMTP send through Laravel Mailer on the same database queue | Accepted | High |
 
 Use [template.md](template.md) for every new record. Status values are `Proposed`, `Accepted`, and `Superseded`.
 
-Phase 1 implemented ADR-0001–0007. The [phase gate](../guardrails.md) passed on 2026-10-09. Phase 2 accepted ADR-0008–0009. ADR-0010 deferred the editor; [ADR-0011](0011-email-block-composer.md) supersedes that deferral with a minimal front-end composer.
+Phase 1 implemented ADR-0001–0007. The [phase gate](../guardrails.md) passed on 2026-10-09. Phase 2 accepted ADR-0008–0009. ADR-0010 deferred the editor; [ADR-0011](0011-email-block-composer.md) supersedes that deferral with a minimal front-end composer. [ADR-0012](0012-smtp-delivery-via-laravel-mailer.md) supersedes ADR-0002: the queue is unchanged and the simulated send becomes a real SMTP send.

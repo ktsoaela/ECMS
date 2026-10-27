@@ -42,6 +42,7 @@ Order after the gate:
 2. A Postman collection under `postman/` for create, list, detail, and the validation failures. This has no ADR.
 3. [ADR-0009](adr/0009-ci.md) — GitHub Actions runs PHPUnit and the Angular test or build. No deploy.
 4. [ADR-0011](adr/0011-email-block-composer.md) — Minimal block composer + Storybook; serialize into the existing `body` string (supersedes ADR-0010).
+5. [ADR-0012](adr/0012-smtp-delivery-via-laravel-mailer.md) — Real SMTP delivery through Laravel Mailer (Mailtrap or company SMTP) on the same database queue (supersedes ADR-0002).
 
 Move a record from `Proposed` to `Accepted` only when that work starts. Do not edit an older record's decision to pretend it always included later work; supersede with a new record instead.
 
@@ -52,7 +53,7 @@ Do not add these unless a new ADR accepts them because a requirement needs them:
 - ETL or ELT tooling, or calling this workload ETL. [ADR-0006](adr/0006-processing-pipeline-not-etl.md).
 - Kafka, RabbitMQ, Redis, Kubernetes, microservices, Elasticsearch, Terraform, or an AWS deploy.
 - Authentication.
-- A real mail provider.
+- A vendor mail SDK or HTTP API. SMTP through Laravel Mailer is accepted by [ADR-0012](adr/0012-smtp-delivery-via-laravel-mailer.md).
 - NgRx or another complex client state library.
 - Structured block storage in MySQL (composer serializes to `body` only). [ADR-0011](adr/0011-email-block-composer.md).
 
@@ -60,7 +61,7 @@ Do not add these unless a new ADR accepts them because a requirement needs them:
 
 Campaign: `queued` on create, `processing` when the first recipient job leaves `pending`, `done` when every recipient job is `sent` or `failed`.
 
-Email job: `pending` on create, `sent` after a simulated send, `failed` when that recipient fails. A job that is not `pending` is not sent again.
+Email job: `pending` on create and while a retry is due, `sent` after the mailer accepts the message, `failed` once that recipient has used all its attempts. A job that is not `pending` is not sent again.
 
 ## API
 
@@ -93,7 +94,7 @@ Unknown campaign: HTTP 404. Unexpected failure: HTTP 500 with a generic message 
 
 ## Assumptions
 
-- Mail is simulated.
+- Mail goes through `MAIL_MAILER`: `log` by default, `smtp` for Mailtrap or company SMTP, `array` in PHPUnit.
 - There is no authentication.
 - Local queue driver is `database`.
 - Duplicate detection trims and lowercases emails.
