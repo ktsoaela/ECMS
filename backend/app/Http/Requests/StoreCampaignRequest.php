@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
+use App\Http\Requests\Concerns\ReturnsValidationDetails;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
 class StoreCampaignRequest extends FormRequest
 {
+    use ReturnsValidationDetails;
+
     public function authorize(): bool
     {
         return true;
@@ -66,20 +67,5 @@ class StoreCampaignRequest extends FormRequest
             'recipient_emails.*.email' => 'Must contain valid emails',
             'recipient_emails.*.distinct' => 'Duplicate email addresses are not accepted',
         ];
-    }
-
-    protected function failedValidation(Validator $validator): void
-    {
-        $details = [];
-
-        foreach ($validator->errors()->messages() as $field => $messages) {
-            $key = str_starts_with($field, 'recipient_emails') ? 'recipient_emails' : $field;
-            $details[$key] = $messages[0];
-        }
-
-        throw new HttpResponseException(response()->json([
-            'error' => 'Invalid input',
-            'details' => $details,
-        ], 422));
     }
 }
