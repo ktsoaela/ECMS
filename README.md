@@ -33,11 +33,12 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 | [0010](docs/adr/0010-email-template-design-system.md) | Block editor deferred (superseded) | Superseded |
 | [0011](docs/adr/0011-email-block-composer.md) | Minimal block composer + Storybook | Accepted |
 | [0012](docs/adr/0012-smtp-delivery-via-laravel-mailer.md) | Real SMTP send via Laravel Mailer on the database queue | Accepted |
+| [0013](docs/adr/0013-user-login.md) | Register and login with a Sanctum bearer token | Accepted |
 
 ## Assumptions
 
 - Mail is sent through Laravel Mailer over **SMTP** (Mailtrap or company server). The default `MAIL_MAILER=log` sends nothing. See [Sending real email](#sending-real-email).
-- There is **no authentication**.
+- Register and login return a Sanctum bearer token. Campaign routes require it. [ADR-0013](docs/adr/0013-user-login.md).
 - Queue driver is `database`.
 - Campaign `body` is a **string** (plain text or HTML serialized from the block composer; max 10,000 characters).
 - Duplicate emails are detected after trim + lowercase.
@@ -52,7 +53,8 @@ See [`TODO.md`](TODO.md) for follow-ups.
 | Item | Status |
 | --- | --- |
 | **Block editor + Storybook** | Implemented as a minimal composer ([ADR-0011](docs/adr/0011-email-block-composer.md)). Blocks serialize into the existing `body` string; no API schema change. |
-| **Auth, vendor mail APIs, bounce tracking, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
+| **Login and register** | Sanctum bearer token. [ADR-0013](docs/adr/0013-user-login.md). |
+| **Vendor mail APIs, bounce tracking, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
 
 Phase 2 extras: Postman under [`postman/`](postman/Email_Campaigns_API.postman_collection.json), CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 

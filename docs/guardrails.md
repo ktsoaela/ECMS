@@ -52,8 +52,8 @@ Do not add these unless a new ADR accepts them because a requirement needs them:
 
 - ETL or ELT tooling, or calling this workload ETL. [ADR-0006](adr/0006-processing-pipeline-not-etl.md).
 - Kafka, RabbitMQ, Redis, Kubernetes, microservices, Elasticsearch, Terraform, or an AWS deploy.
-- Authentication.
 - A vendor mail SDK or HTTP API. SMTP through Laravel Mailer is accepted by [ADR-0012](adr/0012-smtp-delivery-via-laravel-mailer.md).
+- Password reset or email verification. Register and login are accepted by [ADR-0013](adr/0013-user-login.md).
 - NgRx or another complex client state library.
 - Structured block storage in MySQL (composer serializes to `body` only). [ADR-0011](adr/0011-email-block-composer.md).
 
@@ -95,7 +95,7 @@ Unknown campaign: HTTP 404. Unexpected failure: HTTP 500 with a generic message 
 ## Assumptions
 
 - Mail goes through `MAIL_MAILER`: `log` by default, `smtp` for Mailtrap or company SMTP, `array` in PHPUnit.
-- There is no authentication.
+- Register and login return a Sanctum bearer token. Campaign routes require it. [ADR-0013](adr/0013-user-login.md).
 - Local queue driver is `database`.
 - Duplicate detection trims and lowercases emails.
 - `done` includes campaigns that have one or more `failed` jobs.
