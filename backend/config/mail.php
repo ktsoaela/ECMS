@@ -18,6 +18,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Campaign Send Interval
+    |--------------------------------------------------------------------------
+    |
+    | Milliseconds the queue worker pauses after each campaign email. Use it
+    | for SMTP accounts with per-second limits, such as a Mailtrap sandbox.
+    |
+    */
+
+    'send_interval_ms' => (int) env('MAIL_SEND_INTERVAL_MS', 0),
+
+    'test_to' => env('MAIL_TEST_TO'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Mailer Configurations
     |--------------------------------------------------------------------------
     |
@@ -45,7 +59,7 @@ return [
             'port' => env('MAIL_PORT', 2525),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
+            'timeout' => env('MAIL_TIMEOUT', 30),
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
