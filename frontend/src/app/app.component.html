@@ -1,9 +1,16 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" routerLink="/campaigns">Email Campaigns</a>
-    <div class="navbar-nav flex-row gap-3">
-      <a class="nav-link" routerLink="/campaigns" routerLinkActive="active">Campaigns</a>
-      <a class="nav-link" routerLink="/campaigns/new" routerLinkActive="active">Create</a>
+    <div class="navbar-nav flex-row gap-3 align-items-center">
+      @if (auth.isLoggedIn()) {
+        <a class="nav-link" routerLink="/campaigns" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Campaigns</a>
+        <a class="nav-link" routerLink="/campaigns/new" routerLinkActive="active">Create</a>
+        <span class="navbar-text">{{ auth.userName() }}</span>
+        <button class="btn btn-outline-light btn-sm" type="button" (click)="logout()">Log out</button>
+      } @else {
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Log in</a>
+        <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
+      }
     </div>
   </div>
 </nav>

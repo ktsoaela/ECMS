@@ -1,7 +1,8 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
+import { authInterceptor } from './auth/auth.interceptor';
 import { routes } from './app.routes';
 
 // CSR via `ng serve` in Docker (no SSR). Default XHR HttpClient stays zone-patched;
@@ -9,7 +10,7 @@ import { routes } from './app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
   ],
 };
 

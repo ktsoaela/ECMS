@@ -1,0 +1,55 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h1 class="h3 mb-1">Register</h1>
+          <p class="text-secondary mb-4">Create an account to send and review campaigns.</p>
+
+          @if (formError()) {
+            <div class="alert alert-danger" role="alert">{{ formError() }}</div>
+          }
+
+          <form class="vstack gap-3" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <div>
+              <label class="form-label" for="register-name">Name</label>
+              <input id="register-name" class="form-control" formControlName="name" autocomplete="name" />
+              @if (fieldErrors()['name']) {
+                <div class="invalid-feedback d-block">{{ fieldErrors()['name'] }}</div>
+              }
+            </div>
+            <div>
+              <label class="form-label" for="register-email">Email</label>
+              <input id="register-email" type="email" class="form-control" formControlName="email" autocomplete="username" />
+              @if (fieldErrors()['email']) {
+                <div class="invalid-feedback d-block">{{ fieldErrors()['email'] }}</div>
+              }
+            </div>
+            <div>
+              <label class="form-label" for="register-password">Password</label>
+              <input id="register-password" type="password" class="form-control" formControlName="password" autocomplete="new-password" />
+              @if (fieldErrors()['password']) {
+                <div class="invalid-feedback d-block">{{ fieldErrors()['password'] }}</div>
+              }
+            </div>
+            <div>
+              <label class="form-label" for="register-password-confirmation">Confirm password</label>
+              <input id="register-password-confirmation" type="password" class="form-control" formControlName="password_confirmation" autocomplete="new-password" />
+              @if (fieldErrors()['password_confirmation']) {
+                <div class="invalid-feedback d-block">{{ fieldErrors()['password_confirmation'] }}</div>
+              }
+            </div>
+            <button class="btn btn-primary" type="submit" [disabled]="loading()">
+              {{ loading() ? 'Creating account…' : 'Register' }}
+            </button>
+          </form>
+
+          <p class="mb-0 mt-3">
+            Already registered?
+            <a routerLink="/login">Log in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
