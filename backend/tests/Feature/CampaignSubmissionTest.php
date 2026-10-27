@@ -6,13 +6,22 @@ use App\Enums\CampaignStatus;
 use App\Enums\EmailJobStatus;
 use App\Jobs\ProcessEmailJob;
 use App\Models\Campaign;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class CampaignSubmissionTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Sanctum::actingAs(User::factory()->create());
+    }
 
     public function test_valid_campaign_can_be_submitted(): void
     {
