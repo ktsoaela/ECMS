@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, concat, of, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {
   ApiValidationError,
@@ -15,11 +15,21 @@ import {
 export class CampaignService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
+  private cachedList: CampaignSummary[] | null = null;
 
   list(): Observable<CampaignSummary[]> {
-    return this.http.get<CampaignSummary[]>(`${this.baseUrl}/campaigns`).pipe(
-      catchError((error) => this.handleError(error))
+    const fresh = this.http.get<CampaignSummary[]>(`${this.baseUrl}/campaigns`).pipe(
+      tap((campaigns) => {
+        this.cachedList = campaigns;
+      }),
+      catchError((error) => this.handleError(error)),
     );
+
+    if (this.cachedList === null) {
+      return fresh;
+    }
+
+    return concat(of(this.cachedList), fresh);
   }
 
   get(id: number): Observable<CampaignDetail> {

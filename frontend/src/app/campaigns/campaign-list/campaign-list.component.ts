@@ -23,7 +23,9 @@ export class CampaignListComponent implements OnInit {
   }
 
   load(): void {
-    this.loading.set(true);
+    if (this.campaigns().length === 0) {
+      this.loading.set(true);
+    }
     this.error.set(null);
 
     this.campaignsApi.list().subscribe({
@@ -32,8 +34,10 @@ export class CampaignListComponent implements OnInit {
         this.loading.set(false);
       },
       error: (error: Error) => {
-        this.error.set(error.message);
         this.loading.set(false);
+        if (this.campaigns().length === 0) {
+          this.error.set(error.message);
+        }
       },
     });
   }
