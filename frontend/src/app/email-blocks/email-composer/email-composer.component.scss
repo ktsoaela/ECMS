@@ -1,9 +1,208 @@
-.email-composer {
-  .list-group {
-    gap: 0.25rem;
+.studio {
+  display: grid;
+  grid-template-columns: 240px minmax(280px, 1fr) 280px;
+  min-height: 640px;
+  background: #fafafa;
+  color: #111;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.studio-library,
+.studio-editor {
+  background: #fff;
+  padding: 20px 16px;
+}
+
+.studio-library {
+  border-right: 1px solid #e5e5e5;
+}
+
+.studio-editor {
+  border-left: 1px solid #e5e5e5;
+}
+
+.studio-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.studio-heading h2 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.studio-eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #737373;
+  font-weight: 700;
+}
+
+.studio-count {
+  min-width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-size: 0.75rem;
+}
+
+.studio-muted {
+  color: #737373;
+  font-size: 0.85rem;
+}
+
+.studio-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.studio-option strong,
+.studio-option small {
+  display: block;
+}
+
+.studio-option small {
+  color: #737373;
+}
+
+.studio-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.studio-icon-header,
+.studio-icon-text,
+.studio-icon-image,
+.studio-icon-button {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.studio-add {
+  margin-left: auto;
+  color: #737373;
+  font-size: 1.25rem;
+}
+
+.studio-workspace {
+  padding: 20px;
+  min-width: 0;
+}
+
+.studio-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.studio-toolbar h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.studio-devices {
+  display: flex;
+  gap: 6px;
+}
+
+.studio-device {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #737373;
+}
+
+.studio-device.active {
+  border-color: #111;
+  background: #fff;
+  color: #111;
+}
+
+.studio-caption {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #737373;
+  margin-bottom: 8px;
+}
+
+.studio-frame {
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  padding: 12px;
+  margin: 0 auto;
+}
+
+.studio-frame.mobile {
+  max-width: 390px;
+}
+
+.studio-meta {
+  color: #525252;
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+}
+
+.studio-note {
+  text-align: center;
+  color: #737373;
+  font-size: 0.75rem;
+  margin: 12px 0 0;
+}
+
+.studio-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.studio-toast {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 992px) {
+  .studio {
+    grid-template-columns: 1fr;
   }
 
-  .list-group-item.active {
-    z-index: 1;
+  .studio-library,
+  .studio-editor {
+    border: 0;
+    border-top: 1px solid #e5e5e5;
   }
 }

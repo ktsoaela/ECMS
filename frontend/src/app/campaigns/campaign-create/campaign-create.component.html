@@ -1,131 +1,110 @@
-<div class="container-fluid py-4 px-3 px-lg-4">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="h3 mb-3">Create campaign</h1>
-      <p class="text-secondary mb-4">
-        Fields marked with <span class="text-danger">*</span> are required. Compose the email from
-        content blocks, then submit recipients to the API.
-      </p>
-
-      @if (success(); as result) {
-        <div class="alert alert-success" role="status">
-          Campaign created. ID {{ result.campaignId }} with {{ result.recipientCount }} recipients.
-          <a routerLink="/campaigns/{{ result.campaignId }}">View details</a>
-        </div>
-      }
-
-      @if (apiError()) {
-        <div class="alert alert-danger" role="alert">{{ apiError() }}</div>
-      }
-
-      @if (clientError()) {
-        <div class="alert alert-warning" role="alert">{{ clientError() }}</div>
-      }
-
-      <form class="vstack gap-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label" for="name">
-              Campaign name <span class="text-danger" aria-hidden="true">*</span>
-            </label>
-            <input
-              id="name"
-              class="form-control"
-              formControlName="name"
-              placeholder="e.g. Spring Sale"
-              autocomplete="off"
-              [class.is-invalid]="showInvalid('name')"
-            />
-            @if (showInvalid('name') && form.controls.name.hasError('required')) {
-              <div class="invalid-feedback d-block">Campaign name is required.</div>
-            }
-            @if (showInvalid('name') && form.controls.name.hasError('maxlength')) {
-              <div class="invalid-feedback d-block">Campaign name must be at most 255 characters.</div>
-            }
-            @if (fieldErrors()['name']) {
-              <div class="form-text text-danger">{{ fieldErrors()['name'] }}</div>
-            }
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label" for="subject">
-              Subject <span class="text-danger" aria-hidden="true">*</span>
-            </label>
-            <input
-              id="subject"
-              class="form-control"
-              formControlName="subject"
-              placeholder="e.g. 50% Off This Weekend!"
-              autocomplete="off"
-              [class.is-invalid]="showInvalid('subject')"
-            />
-            @if (showInvalid('subject') && form.controls.subject.hasError('required')) {
-              <div class="invalid-feedback d-block">Subject is required.</div>
-            }
-            @if (showInvalid('subject') && form.controls.subject.hasError('maxlength')) {
-              <div class="invalid-feedback d-block">Subject must be at most 255 characters.</div>
-            }
-            @if (fieldErrors()['subject']) {
-              <div class="form-text text-danger">{{ fieldErrors()['subject'] }}</div>
-            }
-          </div>
-        </div>
-
-        <div>
-          <div class="d-flex justify-content-between align-items-baseline mb-2">
-            <label class="form-label mb-0">
-              Email body (blocks) <span class="text-danger" aria-hidden="true">*</span>
-            </label>
-            @if (fieldErrors()['body']) {
-              <div class="form-text text-danger mb-0">{{ fieldErrors()['body'] }}</div>
-            }
-          </div>
-          <p class="form-text mt-0">
-            Add Header, Text, Image, or Button blocks. Edit the selected block in the sidebar; the
-            preview updates live.
-          </p>
-          <div [class.border]="showInvalid('body')" [class.border-danger]="showInvalid('body')" class="rounded">
-            <app-email-composer (bodyChange)="onBodyChange($event)" />
-          </div>
-          @if (showInvalid('body') && form.controls.body.hasError('required')) {
-            <div class="invalid-feedback d-block">Add at least one content block for the email body.</div>
+<div class="compose-page">
+  <form class="compose" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <header class="compose-bar">
+      <div>
+        <p class="compose-eyebrow">New message</p>
+        <h1>Create campaign</h1>
+      </div>
+      <div class="compose-actions">
+        <a class="compose-ghost" routerLink="/campaigns">Campaigns</a>
+        <button class="compose-send" type="submit" [disabled]="loading()">
+          @if (loading()) {
+            Sending…
+          } @else {
+            Send
           }
-          <input type="hidden" formControlName="body" />
-        </div>
+        </button>
+      </div>
+    </header>
 
-        <div class="col-lg-6 px-0">
-          <label class="form-label" for="recipients">
-            Recipient emails <span class="text-danger" aria-hidden="true">*</span>
-          </label>
+    @if (success(); as result) {
+      <div class="alert alert-success rounded-0 mb-0" role="status">
+        Campaign created. ID {{ result.campaignId }} with {{ result.recipientCount }} recipients.
+        <a routerLink="/campaigns/{{ result.campaignId }}">View details</a>
+      </div>
+    }
+
+    @if (apiError()) {
+      <div class="alert alert-danger rounded-0 mb-0" role="alert">{{ apiError() }}</div>
+    }
+
+    @if (clientError()) {
+      <div class="alert alert-warning rounded-0 mb-0" role="alert">{{ clientError() }}</div>
+    }
+
+    <div class="compose-fields">
+      <div class="compose-row">
+        <label for="recipients">To</label>
+        <div class="compose-control">
           <textarea
             id="recipients"
-            class="form-control"
-            rows="5"
+            rows="2"
             formControlName="recipients"
-            placeholder="alice@example.com&#10;bob@example.com"
-            [class.is-invalid]="showInvalid('recipients') || !!fieldErrors()['recipient_emails']"
+            placeholder="alice@example.com"
+            autocomplete="off"
           ></textarea>
-          <div class="form-text">One email per line. Duplicates are rejected.</div>
+          <p class="compose-hint">One email per line. Duplicates are rejected.</p>
           @if (showInvalid('recipients') && form.controls.recipients.hasError('required')) {
-            <div class="invalid-feedback d-block">At least one recipient email is required.</div>
+            <p>At least one recipient email is required.</p>
           }
           @if (fieldErrors()['recipient_emails']) {
-            <div class="form-text text-danger">{{ fieldErrors()['recipient_emails'] }}</div>
+            <p>{{ fieldErrors()['recipient_emails'] }}</p>
           }
         </div>
+      </div>
 
-        <div class="d-flex gap-2">
-          <button class="btn btn-primary" type="submit" [disabled]="loading()">
-            @if (loading()) {
-              Submitting???
-            } @else {
-              Submit campaign
-            }
-          </button>
-          <a class="btn btn-outline-secondary" routerLink="/campaigns">View campaigns</a>
+      <div class="compose-row">
+        <label for="subject">Subject</label>
+        <div class="compose-control">
+          <input
+            id="subject"
+            formControlName="subject"
+            placeholder="Subject"
+            autocomplete="off"
+          />
+          @if (showInvalid('subject') && form.controls.subject.hasError('required')) {
+            <p>Subject is required.</p>
+          }
+          @if (showInvalid('subject') && form.controls.subject.hasError('maxlength')) {
+            <p>Subject must be at most 255 characters.</p>
+          }
+          @if (fieldErrors()['subject']) {
+            <p>{{ fieldErrors()['subject'] }}</p>
+          }
         </div>
-      </form>
-    </div>
-  </div>
-</div>
+      </div>
 
+      <div class="compose-row">
+        <label for="name">Name</label>
+        <div class="compose-control">
+          <input
+            id="name"
+            formControlName="name"
+            placeholder="Campaign name"
+            autocomplete="off"
+          />
+          @if (showInvalid('name') && form.controls.name.hasError('required')) {
+            <p>Campaign name is required.</p>
+          }
+          @if (showInvalid('name') && form.controls.name.hasError('maxlength')) {
+            <p>Campaign name must be at most 255 characters.</p>
+          }
+          @if (fieldErrors()['name']) {
+            <p>{{ fieldErrors()['name'] }}</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="compose-body" [class.is-invalid]="showInvalid('body')">
+      @if (fieldErrors()['body']) {
+        <p class="compose-error">{{ fieldErrors()['body'] }}</p>
+      }
+      @if (showInvalid('body') && form.controls.body.hasError('required')) {
+        <p class="compose-error">Add at least one content block for the email body.</p>
+      }
+      <app-email-composer [subject]="form.controls.subject.value" (bodyChange)="onBodyChange($event)" />
+      <input type="hidden" formControlName="body" />
+    </div>
+  </form>
+</div>

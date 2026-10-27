@@ -53,6 +53,8 @@ export class CampaignCreateComponent {
     this.clientError.set(null);
     this.form.markAllAsTouched();
 
+    this.form.controls.body.setValue(this.composer?.serializedBody() ?? '');
+
     const composerError = this.composer?.validationError() ?? null;
     if (composerError) {
       this.clientError.set(composerError);
