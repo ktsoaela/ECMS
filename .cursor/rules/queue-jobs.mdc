@@ -1,24 +1,25 @@
 ---
-description: Per-recipient queue jobs, simulated send, and isolated failure
+description: Per-recipient queue jobs, Laravel mailer delivery, and isolated failure
 globs: backend/**/*.php
 alwaysApply: false
 ---
 
 # Queue jobs
 
-One `email_jobs` row and one queued job per recipient. `QUEUE_CONNECTION=database`. Dispatch only after the campaign transaction commits.
+One `email_jobs` row and one queued job per recipient. `QUEUE_CONNECTION=database`. Dispatch only after the campaign transaction commits. [ADR-0012](../../docs/adr/0012-smtp-delivery-via-laravel-mailer.md) sends through the Laravel mailer and supersedes the simulated send in ADR-0002.
 
 ## Do
 
 - Process pending jobs FIFO.
-- Simulate the send. Log the campaign id, the recipient, success, and campaign completion.
-- Set the email job to `sent` on success and `failed` on failure.
+- Send `CampaignMail` once per recipient through the configured mailer. Do not queue the mailable again.
+- Leave the row `pending` when a transport error is retried (3 attempts, 10 s then 30 s). Mark it `failed` only from `failed()`.
 - Move the campaign from `queued` to `processing` to `done`.
 - Skip a job that is no longer `pending`.
+- Pause after a successful send when `MAIL_SEND_INTERVAL_MS` is set.
 
 ## Do not
 
-- Call a real mail provider.
+- Add a vendor mail SDK or a second provider strategy.
 - Let one recipient failure stop the worker.
 - Treat `done` as "every email succeeded". `done` means every job is `sent` or `failed`.
 
@@ -27,4 +28,6 @@ One `email_jobs` row and one queued job per recipient. `QUEUE_CONNECTION=databas
 if ($emailJob->status !== EmailJobStatus::Pending) {
     return;
 }
+
+Mail::to($emailJob->recipient_email)->send(new CampaignMail($campaign));
 ```

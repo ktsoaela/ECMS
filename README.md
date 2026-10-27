@@ -22,7 +22,7 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 | ADR | Decision | Status |
 | --- | --- | --- |
 | [0001](docs/adr/0001-application-architecture.md) | Angular, Laravel API, MySQL, Laravel queue | Accepted |
-| [0002](docs/adr/0002-asynchronous-email-processing.md) | One queued job per recipient (database queue) | Accepted |
+| [0002](docs/adr/0002-asynchronous-email-processing.md) | One queued job per recipient (database queue) | Superseded |
 | [0003](docs/adr/0003-persistence.md) | `campaigns` / `email_jobs` with status enums | Accepted |
 | [0004](docs/adr/0004-validation-and-api-contract.md) | Form-request validation and fixed JSON contracts | Accepted |
 | [0005](docs/adr/0005-atomic-campaign-creation.md) | Transaction, then dispatch after commit | Accepted |
@@ -32,10 +32,11 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 | [0009](docs/adr/0009-ci.md) | GitHub Actions tests/build | Accepted |
 | [0010](docs/adr/0010-email-template-design-system.md) | Block editor deferred (superseded) | Superseded |
 | [0011](docs/adr/0011-email-block-composer.md) | Minimal block composer + Storybook | Accepted |
+| [0012](docs/adr/0012-smtp-delivery-via-laravel-mailer.md) | Real SMTP send via Laravel Mailer on the database queue | Accepted |
 
 ## Assumptions
 
-- Mail is **simulated** (no real mail provider).
+- Mail is sent through Laravel Mailer over **SMTP** (Mailtrap or company server). The default `MAIL_MAILER=log` sends nothing. See [Sending real email](#sending-real-email).
 - There is **no authentication**.
 - Queue driver is `database`.
 - Campaign `body` is a **string** (plain text or HTML serialized from the block composer; max 10,000 characters).
@@ -51,7 +52,7 @@ See [`TODO.md`](TODO.md) for follow-ups.
 | Item | Status |
 | --- | --- |
 | **Block editor + Storybook** | Implemented as a minimal composer ([ADR-0011](docs/adr/0011-email-block-composer.md)). Blocks serialize into the existing `body` string; no API schema change. |
-| **Auth, real mail, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
+| **Auth, vendor mail APIs, bounce tracking, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
 
 Phase 2 extras: Postman under [`postman/`](postman/Email_Campaigns_API.postman_collection.json), CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
@@ -176,7 +177,61 @@ curl http://localhost:8000/up
 curl http://localhost:8000/api/campaigns
 ```
 
-Open http://localhost:4200 — create a campaign, wait for the worker, open detail and confirm recipient statuses move to `sent` (or `failed` when isolated).
+Open http://localhost:4200 — create a campaign, open detail and watch recipient statuses move to `sent` (the view refreshes every 3 s until the campaign is `done`). A recipient becomes `failed` only after 3 attempts.
+
+### Sending real email
+
+Delivery is configured only in `backend/.env` ([ADR-0012](docs/adr/0012-smtp-delivery-via-laravel-mailer.md)). With the default `MAIL_MAILER=log`, messages go to `backend/storage/logs/laravel.log`.
+
+**Mailtrap sandbox** (safe: nothing reaches a real inbox). In Mailtrap, open Email Testing → Inboxes → your inbox → SMTP and copy the credentials:
+
+```dotenv
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_SCHEME=null
+MAIL_USERNAME=<mailtrap username>
+MAIL_PASSWORD=<mailtrap password>
+MAIL_FROM_ADDRESS=campaigns@example.com
+MAIL_SEND_INTERVAL_MS=1000
+```
+
+**Mailtrap Email Sending** (delivers to a real inbox). In Mailtrap, open Email Sending and copy the SMTP settings. The username is `api` and the password is the sending API token. A `hello@demomailtrap.co` from-address only delivers to the Mailtrap account owner.
+
+```dotenv
+MAIL_MAILER=smtp
+MAIL_HOST=live.smtp.mailtrap.io
+MAIL_PORT=587
+MAIL_SCHEME=smtp
+MAIL_USERNAME=api
+MAIL_PASSWORD=<api token>
+MAIL_FROM_ADDRESS=hello@demomailtrap.co
+MAIL_FROM_NAME="Mailtrap Test"
+MAIL_TEST_TO=you@example.com
+```
+
+Send one message without creating a campaign:
+
+```bash
+docker compose exec backend php artisan send-mail
+```
+
+**Company SMTP** (real delivery). Use an account that is allowed to send as `MAIL_FROM_ADDRESS`:
+
+```dotenv
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.office365.com      # Google Workspace: smtp.gmail.com
+MAIL_PORT=587                     # STARTTLS; for 465 also set MAIL_SCHEME=smtps
+MAIL_SCHEME=null
+MAIL_USERNAME=you@company.com
+MAIL_PASSWORD=<password or app password>
+MAIL_FROM_ADDRESS=you@company.com
+MAIL_FROM_NAME="Company Campaigns"
+```
+
+The worker caches configuration, so restart it after editing: `docker compose restart queue`. Then create a campaign and follow `docker compose logs -f queue`. A transport error is logged as `Send to … failed`. It is retried after 10 s and then 30 s, and the recipient is marked `failed` with a `Giving up on …` log line.
+
+Microsoft 365 needs SMTP AUTH enabled for the mailbox. Gmail and Google Workspace need 2-step verification and an app password.
 
 API base URL used by Angular: `http://localhost:8000/api`.
 
