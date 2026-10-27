@@ -42,6 +42,7 @@ Order after the gate:
 2. A Postman collection under `postman/` for create, list, detail, and the validation failures. This has no ADR.
 3. [ADR-0009](adr/0009-ci.md) — GitHub Actions runs PHPUnit and the Angular test or build. No deploy.
 4. [ADR-0011](adr/0011-email-block-composer.md) — Minimal block composer + Storybook; serialize into the existing `body` string (supersedes ADR-0010).
+4a. [ADR-0014](adr/0014-campaign-studio-layout.md) — Studio layout on the create screen. Still serializes to `body`. Do not load the standalone HTML file.
 5. [ADR-0012](adr/0012-smtp-delivery-via-laravel-mailer.md) — Real SMTP delivery through Laravel Mailer (Mailtrap or company SMTP) on the same database queue (supersedes ADR-0002).
 
 Move a record from `Proposed` to `Accepted` only when that work starts. Do not edit an older record's decision to pretend it always included later work; supersede with a new record instead.

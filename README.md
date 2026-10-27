@@ -34,6 +34,7 @@ Accepted and proposed records live under [`docs/adr/`](docs/adr/README.md). Phas
 | [0011](docs/adr/0011-email-block-composer.md) | Minimal block composer + Storybook | Accepted |
 | [0012](docs/adr/0012-smtp-delivery-via-laravel-mailer.md) | Real SMTP send via Laravel Mailer on the database queue | Accepted |
 | [0013](docs/adr/0013-user-login.md) | Register and login with a Sanctum bearer token | Accepted |
+| [0014](docs/adr/0014-campaign-studio-layout.md) | Studio layout on the create screen; body stays a string | Accepted |
 
 ## Assumptions
 
@@ -52,7 +53,7 @@ See [`TODO.md`](TODO.md) for follow-ups.
 
 | Item | Status |
 | --- | --- |
-| **Block editor + Storybook** | Implemented as a minimal composer ([ADR-0011](docs/adr/0011-email-block-composer.md)). Blocks serialize into the existing `body` string; no API schema change. |
+| **Block editor + Storybook** | Composer plus the studio layout on create ([ADR-0011](docs/adr/0011-email-block-composer.md), [ADR-0014](docs/adr/0014-campaign-studio-layout.md)). Blocks serialize into the existing `body` string; no API schema change. |
 | **Login and register** | Sanctum bearer token. [ADR-0013](docs/adr/0013-user-login.md). |
 | **Vendor mail APIs, bounce tracking, Kafka/Redis/K8s, NgRx** | Out of scope per guardrails. |
 

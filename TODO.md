@@ -1,15 +1,15 @@
 # Assessment follow-ups
 
-Phase gate passed. ADR-0011 adds the minimal email block composer + Storybook.
+Phase gate passed. ADR-0011 adds the minimal email block composer + Storybook. ADR-0014 is the studio layout on the create screen.
 
 ## Done
 
 | Item | Notes |
 | --- | --- |
 | Tasks 1–11 | API, queue, Angular list/detail, PHPUnit |
-| ADR-0001–0009, 0011 | Accepted (0010 superseded) |
+| ADR-0001–0009, 0011–0014 | Accepted (0010 superseded) |
 | Scramble / Postman / CI | Phase 2 extras |
-| Block composer + Storybook | Header/Text/Image/Button, sidebar, preview, serialize to `body` |
+| Block composer + Storybook | Header/Text/Image/Button, studio layout on create, serialize to `body` |
 
 ## Optional polish
 

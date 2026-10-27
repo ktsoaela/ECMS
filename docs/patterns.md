@@ -16,7 +16,7 @@ A pattern is used only where a current problem needs it. The list is a map, not 
 | Angular components and a campaign service | Standalone screens, reactive forms, and one service that calls the API. Signals or that service hold view state. |
 | OpenAPI via Scramble | Generated docs at `/docs/api` and `/docs/api.json`. [ADR-0008](adr/0008-openapi-via-scramble.md). |
 | CI workflow | GitHub Actions runs PHPUnit and `ng build`. [ADR-0009](adr/0009-ci.md). |
-| Email block composer + Storybook | Reusable Header/Text/Image/Button blocks; serialize to `body`. [ADR-0011](adr/0011-email-block-composer.md). |
+| Email block composer + Storybook | Reusable Header/Text/Image/Button blocks; serialize to `body`. [ADR-0011](adr/0011-email-block-composer.md). The create screen uses the studio layout from [ADR-0014](adr/0014-campaign-studio-layout.md). |
 | Sanctum bearer token | Register and login issue a token. Campaign routes require `Authorization: Bearer`. [ADR-0013](adr/0013-user-login.md). |
 
 ## Not introduced

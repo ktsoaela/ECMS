@@ -19,7 +19,8 @@ Records stay short. Implementation detail lives in [guardrails.md](../guardrails
 | [0011](0011-email-block-composer.md) | Minimal block composer + Storybook; serialize to `body` | Accepted | Medium |
 | [0012](0012-smtp-delivery-via-laravel-mailer.md) | Real SMTP send through Laravel Mailer on the same database queue | Accepted | High |
 | [0013](0013-user-login.md) | Register and login with a Sanctum bearer token | Accepted | High |
+| [0014](0014-campaign-studio-layout.md) | Studio layout on `/campaigns/new`; still serializes to `body` | Accepted | High |
 
 Use [template.md](template.md) for every new record. Status values are `Proposed`, `Accepted`, and `Superseded`.
 
-Phase 1 implemented ADR-0001–0007. The [phase gate](../guardrails.md) passed on 2026-10-09. Phase 2 accepted ADR-0008–0009. ADR-0010 deferred the editor; [ADR-0011](0011-email-block-composer.md) supersedes that deferral with a minimal front-end composer. [ADR-0012](0012-smtp-delivery-via-laravel-mailer.md) supersedes ADR-0002: the queue is unchanged and the simulated send becomes a real SMTP send. [ADR-0013](0013-user-login.md) adds register and login; campaign routes require the token.
+Phase 1 implemented ADR-0001–0007. The [phase gate](../guardrails.md) passed on 2026-10-09. Phase 2 accepted ADR-0008–0009. ADR-0010 deferred the editor; [ADR-0011](0011-email-block-composer.md) supersedes that deferral with a minimal front-end composer. [ADR-0012](0012-smtp-delivery-via-laravel-mailer.md) supersedes ADR-0002: the queue is unchanged and the simulated send becomes a real SMTP send. [ADR-0013](0013-user-login.md) adds register and login; campaign routes require the token. [ADR-0014](0014-campaign-studio-layout.md) puts the campaign-studio layout on the create screen without loading the standalone HTML file.

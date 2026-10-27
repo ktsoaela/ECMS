@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Project scope
 
-The Phase 1 gate in `docs/guardrails.md` has **passed**. Accepted ADRs **0001–0009** and **0011–0013** are current. ADR-0010 is superseded by ADR-0011 (minimal block composer + Storybook; serialize to `body`). ADR-0012 sends mail through Laravel. ADR-0013 requires a Sanctum token on campaign routes.
+The Phase 1 gate in `docs/guardrails.md` has **passed**. Accepted ADRs **0001–0009** and **0011–0014** are current. ADR-0010 is superseded by ADR-0011 (minimal block composer + Storybook; serialize to `body`). ADR-0012 sends mail through Laravel. ADR-0013 requires a Sanctum token on campaign routes. ADR-0014 is the studio layout on the create screen; do not iframe the standalone HTML file.
 
 ## Do
 
